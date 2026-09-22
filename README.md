@@ -6,9 +6,9 @@ ExamMonitorSystem provides real-time visibility into student workstations, detec
 
 ---
 
-## Background & Origin
+## Project Origin
 
-This project was originally conceptualized and developed during my 3rd semester of engineering to solve practical proctoring challenges in college computer laboratories. What started as an MVP to prevent unauthorized web browsing and cheating during hands-on lab practical examinations has evolved into a structured, socket-based monitoring system featuring process telemetry, active browser lockdown, and centralized proctor controls.
+<mark>**Project Origin:** Built during my 3rd semester of engineering as an MVP to stop students from opening unauthorized websites and cheating during college lab exams.</mark>
 
 ---
 
