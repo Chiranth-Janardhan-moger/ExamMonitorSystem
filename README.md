@@ -43,6 +43,7 @@ ExamMonitorSystem utilizes an inverted, single-connection TCP architecture. The 
 
 ## Core Capabilities
 
+- **Instant Browser Lockdown & Termination**: During active exams, a high-frequency background watchdog continuously scans processes and instantly terminates unauthorized web browsers (Chrome, Edge, Firefox, Brave, Opera, Safari, Tor) before web pages can render, capturing screenshot evidence and triggering an immediate workstation freeze.
 - **Active Window Telemetry**: Tracks the foreground application title and parent process name across Windows, Linux, and macOS.
 - **Process Whitelist/Blacklist Monitoring**: Periodically scans the student workstation for unauthorized processes (browsers, remote desktop clients, communication software, terminal shells).
 - **Proctor-Controlled Screen Freezing**: Deploys a topmost fullscreen overlay (`freeze_screen.py`) that traps keyboard inputs and mouse clicks when a policy breach occurs or upon proctor command.

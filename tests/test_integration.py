@@ -47,6 +47,8 @@ class TestExamMonitorIntegration(unittest.TestCase):
         data = sock.recv(1024).decode("utf-8")
         status = json.loads(data.strip())
         self.assertEqual(status.get("type"), "status")
+        self.assertIn("blocked_apps", status)
+        self.assertIn("chrome", status["blocked_apps"])
 
         # 2. Send Heartbeat
         hb_msg = {

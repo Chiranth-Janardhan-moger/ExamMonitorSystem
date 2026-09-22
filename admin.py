@@ -168,7 +168,9 @@ class ExamAdminServer:
                 "type": "status",
                 "active": self.exam_active,
                 "remaining_time": remaining,
-                "exam_name": self.exam_name
+                "exam_name": self.exam_name,
+                "blocked_apps": self.blocked_apps,
+                "blocked_processes": self.blocked_processes
             })
             return name
 
@@ -276,7 +278,9 @@ class ExamAdminServer:
             "type": "status",
             "active": True,
             "remaining_time": float(self.exam_duration),
-            "exam_name": self.exam_name
+            "exam_name": self.exam_name,
+            "blocked_apps": self.blocked_apps,
+            "blocked_processes": self.blocked_processes
         })
 
     def stop_exam(self):
@@ -287,7 +291,9 @@ class ExamAdminServer:
             "type": "status",
             "active": False,
             "remaining_time": 0.0,
-            "exam_name": self.exam_name
+            "exam_name": self.exam_name,
+            "blocked_apps": self.blocked_apps,
+            "blocked_processes": self.blocked_processes
         })
 
     def start(self):

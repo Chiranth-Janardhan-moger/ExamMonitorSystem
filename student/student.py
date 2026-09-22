@@ -40,6 +40,11 @@ class StudentMonitorClient:
         self.running = True
         self.freeze_proc: Optional[subprocess.Popen] = None
         self.last_screenshot_time = 0.0
+        self.blocked_apps = [
+            "chrome", "firefox", "edge", "msedge", "safari",
+            "opera", "brave", "vivaldi", "tor"
+        ]
+        self.last_enforcement_alert = 0.0
 
         self.load_config()
 
@@ -359,7 +364,9 @@ class StudentMonitorClient:
             self.exam_active = cmd.get("active", False)
             self.exam_remaining_time = cmd.get("remaining_time", 0.0)
             self.exam_name = cmd.get("exam_name", self.exam_name)
-            self.log(f"Exam status updated: active={self.exam_active}, remaining={self.exam_remaining_time:.1f}m")
+            if "blocked_apps" in cmd and cmd["blocked_apps"]:
+                self.blocked_apps = [str(a).lower() for a in cmd["blocked_apps"]]
+            self.log(f"Exam status updated: active={self.exam_active}, remaining={self.exam_remaining_time:.1f}m, blocked_apps={len(self.blocked_apps)}")
         elif cmd_type == "freeze":
             reason = cmd.get("reason", "Proctor initiated lock")
             duration = cmd.get("duration", 30)
@@ -374,12 +381,59 @@ class StudentMonitorClient:
             if path:
                 self.send_json({"type": "screenshot", "student": self.student_name, "filename": path})
 
+    def browser_enforcement_watchdog(self):
+        """Rapid background watchdog that terminates prohibited browsers immediately during active exams."""
+        while self.running:
+            if self.exam_active:
+                killed_browsers = set()
+                try:
+                    for proc in psutil.process_iter(['name']):
+                        try:
+                            pname = proc.info['name'].lower()
+                            for b in self.blocked_apps:
+                                if b in pname:
+                                    try:
+                                        proc.kill()
+                                        killed_browsers.add(pname)
+                                    except (psutil.NoSuchProcess, psutil.AccessDenied):
+                                        pass
+                                    break
+                        except (psutil.NoSuchProcess, psutil.AccessDenied):
+                            continue
+                except Exception as e:
+                    self.log(f"Error in browser watchdog: {e}")
+
+                if killed_browsers:
+                    now = time.time()
+                    details = f"Prohibited browser terminated: {', '.join(killed_browsers)}"
+                    self.log(f"[MALPRACTICE ENFORCEMENT] {details}")
+
+                    if now - self.last_enforcement_alert > 5.0:
+                        self.last_enforcement_alert = now
+                        self.send_json({
+                            "type": "alert",
+                            "student": self.student_name,
+                            "alert_type": "PROHIBITED_BROWSER_TERMINATED",
+                            "details": details
+                        })
+                        self.capture_screenshot()
+                        self.freeze_screen(
+                            reason=f"Malpractice Violation: Prohibited browser ({', '.join(killed_browsers)}) was opened and terminated.",
+                            duration=30
+                        )
+
+            # Rapid poll interval for swift response (every 0.5s)
+            time.sleep(0.5)
+
     def run(self):
         self.prevent_multiple_instances()
         self.log(f"Student proctor agent starting for user '{self.student_name}'...")
 
         # Background thread to receive proctor instructions
         threading.Thread(target=self.listen_server_commands, daemon=True).start()
+
+        # Background rapid watchdog to kill browsers during active exams
+        threading.Thread(target=self.browser_enforcement_watchdog, daemon=True).start()
 
         prev_window = ""
         prev_process = ""
