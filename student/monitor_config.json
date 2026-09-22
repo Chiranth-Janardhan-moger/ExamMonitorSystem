@@ -1,0 +1,9 @@
+{
+    "admin_host": "127.0.0.1",
+    "admin_port": 9999,
+    "heartbeat_interval": 3,
+    "reconnect_interval": 5,
+    "enable_screenshots": true,
+    "log_file": "student_monitor.log",
+    "screenshot_dir": "screenshots"
+}

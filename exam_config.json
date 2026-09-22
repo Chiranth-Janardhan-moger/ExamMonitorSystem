@@ -1,0 +1,26 @@
+{
+    "exam_name": "Standard Examination",
+    "exam_duration": 60,
+    "blocked_apps": [
+        "chrome",
+        "firefox",
+        "edge",
+        "safari",
+        "opera",
+        "brave",
+        "vivaldi",
+        "tor"
+    ],
+    "blocked_processes": [
+        "discord",
+        "slack",
+        "teams",
+        "telegram",
+        "whatsapp",
+        "anydesk",
+        "teamviewer",
+        "cmd",
+        "powershell",
+        "wireshark"
+    ]
+}

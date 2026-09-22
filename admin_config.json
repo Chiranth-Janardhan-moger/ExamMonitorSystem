@@ -1,0 +1,10 @@
+{
+    "host": "0.0.0.0",
+    "port": 9999,
+    "log_level": "INFO",
+    "auto_freeze": true,
+    "freeze_duration": 30,
+    "freeze_message": "Unauthorized activity detected. Screen frozen by administrator.",
+    "save_logs": true,
+    "disconnect_timeout": 30
+}
