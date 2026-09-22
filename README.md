@@ -6,6 +6,12 @@ ExamMonitorSystem provides real-time visibility into student workstations, detec
 
 ---
 
+## Background & Origin
+
+This project was originally conceptualized and developed during my 3rd semester of engineering to solve practical proctoring challenges in college computer laboratories. What started as an MVP to prevent unauthorized web browsing and cheating during hands-on lab practical examinations has evolved into a structured, socket-based monitoring system featuring process telemetry, active browser lockdown, and centralized proctor controls.
+
+---
+
 ## Architecture Overview
 
 ExamMonitorSystem utilizes an inverted, single-connection TCP architecture. The student client initiates and maintains a single persistent socket connection to the admin proctor server. All heartbeats, telemetry, violation alerts, and incoming proctor commands are transmitted bi-directionally across this established channel, ensuring reliable operation across NAT gateways, subnets, and local firewalls.
